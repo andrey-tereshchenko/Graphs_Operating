@@ -1,3 +1,7 @@
+var vertex_counter = 1;
+var edges_counter = 1;
+
+
 $(document).ready(function () {
     var i = 1;
     $("#add_vertex").click(function () {
@@ -5,11 +9,13 @@ $(document).ready(function () {
 
         $('#table_vertex').append('<tr id="addr' + (i + 1) + '"></tr>');
         i++;
+        vertex_counter = i;
     });
     $("#delete_vertex").click(function () {
         if (i > 1) {
             $("#addr" + (i - 1)).html('');
             i--;
+            vertex_counter = i;
         }
     });
 
@@ -22,11 +28,13 @@ $(document).ready(function () {
 
         $('#table_edges').append('<tr id="addr_' + (i + 1) + '"></tr>');
         i++;
+        edges_counter = i;
     });
     $("#delete_edges").click(function () {
         if (i > 1) {
             $("#addr_" + (i - 1)).html('');
             i--;
+            edges_counter = i;
         }
     });
 
@@ -50,6 +58,8 @@ $(document).ready(function () {
         },
         submitHandler: function (form) {
             var data = new FormData($('#graph_operate').get(0));
+            data.append('vertex_counter',vertex_counter);
+            data.append('edges_counter', edges_counter);
             $.ajax({
                 url: "/graph/operate/",
                 type: "POST",
