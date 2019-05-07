@@ -8,6 +8,15 @@ def index(request):
     return render(request, 'index.html')
 
 
+def choose_algorithm(algorithm, graph):
+    if algorithm == 'page_rank':
+        print(nx.pagerank(graph))
+    elif algorithm == 'label_propagation':
+        g = nx.algorithms.community.label_propagation_communities(graph)
+        for i in g:
+            print(i)
+
+
 class GraphView(APIView):
     def get(self, request):
         return render(request, 'index.html')
@@ -19,6 +28,7 @@ class GraphView(APIView):
         my_data = request.data
         vertex_count = int(my_data['vertex_counter'])
         edges_count = int(my_data['edges_counter'])
+        algorithm = my_data['algorithm']
         label_v = 'vertex_name_'
         label_src = 'src_'
         label_dest = 'dest_'
@@ -29,11 +39,12 @@ class GraphView(APIView):
             edges.append(
                 (my_data[label_src + str(i)], my_data[label_dest + str(i)], int(my_data[label_weight + str(i)])))
             weights.append(my_data[label_weight + str(i)])
-        print(vertex)
-        print(edges)
-        print(weights)
+        # print(vertex)
+        # print(edges)
+        # print(weights)
+        print(algorithm)
         G = nx.Graph()
         G.add_nodes_from(vertex)
         G.add_weighted_edges_from(edges)
-        print(nx.pagerank(G))
+        choose_algorithm(algorithm, G)
         return HttpResponse("Good!")

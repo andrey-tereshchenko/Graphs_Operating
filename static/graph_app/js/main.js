@@ -58,8 +58,15 @@ $(document).ready(function () {
         },
         submitHandler: function (form) {
             var data = new FormData($('#graph_operate').get(0));
-            data.append('vertex_counter',vertex_counter);
+            data.append('vertex_counter', vertex_counter);
             data.append('edges_counter', edges_counter);
+            var algorithm = '';
+            if (document.getElementById('page_rank').checked) {
+                algorithm = "page_rank"
+            } else if (document.getElementById('label_propagation').checked) {
+                algorithm = "label_propagation"
+            }
+            data.append('algorithm',algorithm);
             $.ajax({
                 url: "/graph/operate/",
                 type: "POST",
