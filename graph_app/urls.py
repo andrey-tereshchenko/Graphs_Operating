@@ -3,5 +3,5 @@ from graph_app import views
 
 urlpatterns = [
     path('', views.index),
-    path('operate/', views.GraphView.as_view())
+    path('operate/', views.GraphView.as_view()),
 ]

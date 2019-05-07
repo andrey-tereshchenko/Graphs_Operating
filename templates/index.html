@@ -1,116 +1,141 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Graph Input</title>
-</head>
-<body>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-
-<!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-<script src="{% static "graph_app/js/jquery.validate.min.js" %}"></script>
-<form id="graph_operate" enctype="multipart/form-data" method="post" action="">
-    {% csrf_token %}
-    <h3 style="margin-left: 5%">Введіть дані про вершини та ребра графа</h3>
-    <div style=" display: flex;">
-        <div class="container" style="width: 20%;margin-left: 5%;margin-top: 2%;">
-            <div class="row clearfix">
-                <div class="col-md-12 column">
-                    <table class="table table-bordered table-hover" id="table_vertex">
-                        <thead>
-                        <tr>
-                            <th class="text-center">
-                                #
-                            </th>
-                            <th class="text-center">
-                                Вершини графа
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr id='addr0'>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                <input type="text" name='vertex_name_0' placeholder='Назва' class="form-control"/>
-                            </td>
-                        </tr>
-                        <tr id='addr1'></tr>
-                        </tbody>
-                    </table>
+{% extends 'base.html' %}
+{% block content %}
+    <form id="graph_operate" enctype="multipart/form-data" method="post" action="">
+        {% csrf_token %}
+        <h3 style="margin-left: 5%">Введіть дані про вершини та ребра графа</h3>
+        <div style=" display: flex;">
+            <div class="container" style="width: 20%;margin-left: 5%;margin-top: 2%;">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <table class="table table-bordered table-hover" id="table_vertex">
+                            <thead>
+                            <tr>
+                                <th class="text-center">
+                                    #
+                                </th>
+                                <th class="text-center">
+                                    Вершини графа
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr id='addr0'>
+                                <td>
+                                    1
+                                </td>
+                                <td>
+                                    <input type="text" name='vertex_name_0' placeholder='Назва' class="form-control"/>
+                                </td>
+                            </tr>
+                            <tr id='addr1'></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+                <a id="add_vertex" class="btn btn-default pull-left">Додати вершину</a><a id='delete_vertex'
+                                                                                          class="pull-right btn btn-default">Видалити</a>
             </div>
-            <a id="add_vertex" class="btn btn-default pull-left">Додати вершину</a><a id='delete_vertex'
-                                                                                      class="pull-right btn btn-default">Видалити</a>
-        </div>
 
-        <div class="container" style="width: 40%;margin-left: 1%;margin-top: 2%;">
-            <div class="row clearfix">
-                <div class="col-md-12 column">
-                    <table class="table table-bordered table-hover" id="table_edges">
-                        <thead>
-                        <tr>
-                            <th class="text-center">
-                                #
-                            </th>
-                            <th class="text-center">
-                                Звідки
-                            </th>
-                            <th class="text-center">
-                                Куди
-                            </th>
-                            <th class="text-center">
-                                Вага
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr id='addr_0'>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                <input type="text" name='src_0' placeholder='Звідки' class="form-control"/>
-                            </td>
-                            <td>
-                                <input type="text" name='dest_0' placeholder='Куди' class="form-control"/>
-                            </td>
-                            <td>
-                                <input type="text" name='weight_0' placeholder='Вага' class="form-control"/>
-                            </td>
-                        </tr>
-                        <tr id='addr_1'></tr>
-                        </tbody>
-                    </table>
+            <div class="container" style="width: 40%;margin-left: 1%;margin-top: 2%;">
+                <div class="row clearfix">
+                    <div class="col-md-12 column">
+                        <table class="table table-bordered table-hover" id="table_edges">
+                            <thead>
+                            <tr>
+                                <th class="text-center">
+                                    #
+                                </th>
+                                <th class="text-center">
+                                    Звідки
+                                </th>
+                                <th class="text-center">
+                                    Куди
+                                </th>
+                                <th class="text-center">
+                                    Вага
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr id='addr_0'>
+                                <td>
+                                    1
+                                </td>
+                                <td>
+                                    <input type="text" name='src_0' placeholder='Звідки' class="form-control"/>
+                                </td>
+                                <td>
+                                    <input type="text" name='dest_0' placeholder='Куди' class="form-control"/>
+                                </td>
+                                <td>
+                                    <input type="text" name='weight_0' placeholder='Вага' class="form-control"/>
+                                </td>
+                            </tr>
+                            <tr id='addr_1'></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+                <a id="add_edges" class="btn btn-default pull-left">Додати ребро</a><a id='delete_edges'
+                                                                                       class="pull-right btn btn-default">Видалити</a>
             </div>
-            <a id="add_edges" class="btn btn-default pull-left">Додати ребро</a><a id='delete_edges'
-                                                                                   class="pull-right btn btn-default">Видалити</a>
         </div>
-    </div>
 
-    <div class="container" style="margin-left: 5%">
-        <h3>Алгоритми</h3>
-        <div class="form-check">
-            <label class="form-check-label">
-                <input type="radio" class="form-check-input" id="page_rank" name="algorithm_r"> Page Rank
-            </label>
+        <div class="container" style="margin-left: 5%">
+            <h3>Алгоритми</h3>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" id="page_rank" name="algorithm_r"> Page Rank
+                </label>
+            </div>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" id="label_propagation" name="algorithm_r" checked>
+                    Label
+                    Propagation
+                </label>
+            </div>
         </div>
-        <div class="form-check">
-            <label class="form-check-label">
-                <input type="radio" class="form-check-input" id="label_propagation" name="algorithm_r" checked> Label Propagation
-            </label>
-        </div>
+        <button type="submit" class="btn btn-primary" style="margin-left: 5%; margin-top: 2%">Виконати алгоритм</button>
+    </form>
+{% endblock %}
+
+{% block graph_draw %}
+    <div id="container" style="height: 400px;width: 700px; margin-left: 5%">
+        <h3> Зображення графа</h3>
+        <div id="graph-container"></div>
     </div>
-    <button type="submit" class="btn btn-primary" style="margin-left: 5%; margin-top: 2%">Виконати алгоритм</button>
-</form>
-<script src="{% static "graph_app/js/main.js" %}"></script>
-</body>
-</html>
+    <script>
+        var i,
+            s,
+            N = 30,
+            E = 40,
+            g = {
+                nodes: [],
+                edges: []
+            };
+        // Generate a random graph:
+        for (i = 0; i < N; i++)
+            g.nodes.push({
+                id: 'n' + i,
+                label: 'Node ' + i,
+                x: Math.random(),
+                y: Math.random(),
+                size: Math.random(),
+                color: '#666'
+            });
+        for (i = 0; i < E; i++)
+            g.edges.push({
+                id: 'e' + i,
+                source: 'n' + (Math.random() * N | 0),
+                target: 'n' + (Math.random() * N | 0),
+                size: Math.random(),
+                color: '#ccc'
+            });
+        // Instantiate sigma:
+        s = new sigma({
+            graph: g,
+            container: 'graph-container'
+        });
+    </script>
+{% endblock %}

@@ -75,6 +75,7 @@ $(document).ready(function () {
                 processData: false,
                 contentType: false,
                 success: function (data) {
+                    alert("Good!")
                 }
             });
             return false;
