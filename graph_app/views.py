@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
+from rest_framework.utils import json
 from rest_framework.views import APIView
 import networkx as nx
 
@@ -10,7 +11,8 @@ def index(request):
 
 def choose_algorithm(algorithm, graph):
     if algorithm == 'page_rank':
-        print(nx.pagerank(graph))
+        result = nx.pagerank(graph)
+        return result
     elif algorithm == 'label_propagation':
         g = nx.algorithms.community.label_propagation_communities(graph)
         for i in g:
@@ -46,5 +48,9 @@ class GraphView(APIView):
         G = nx.Graph()
         G.add_nodes_from(vertex)
         G.add_weighted_edges_from(edges)
-        choose_algorithm(algorithm, G)
-        return HttpResponse("Good!")
+        result = choose_algorithm(algorithm, G)
+        print(result)
+        data = dict()
+        data['edges'] = edges
+        data['result'] = result
+        return JsonResponse(data)

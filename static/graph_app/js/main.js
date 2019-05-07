@@ -1,5 +1,21 @@
 var vertex_counter = 1;
 var edges_counter = 1;
+// var g = {
+//     nodes: [],
+//     edges: []
+// };
+// g.nodes.push({
+//     id: 'n_0',
+//     label: 'Node 0',
+//     x: Math.random(),
+//     y: Math.random(),
+//     size: 1,
+//     color: '#7b130f'
+// });
+// s = new sigma({
+//     graph: g,
+//     container: 'graph-container'
+// });
 
 
 $(document).ready(function () {
@@ -10,6 +26,19 @@ $(document).ready(function () {
         $('#table_vertex').append('<tr id="addr' + (i + 1) + '"></tr>');
         i++;
         vertex_counter = i;
+        // g.nodes.push({
+        //     id: 'n' + i,
+        //     label: 'Node ' + i,
+        //     x: Math.random(),
+        //     y: Math.random(),
+        //     size: 1,
+        //     color: '#7b130f'
+        // });
+        // s.kill()
+        // s = new sigma({
+        //     graph: g,
+        //     container: 'graph-container'
+        // });
     });
     $("#delete_vertex").click(function () {
         if (i > 1) {
@@ -29,6 +58,7 @@ $(document).ready(function () {
         $('#table_edges').append('<tr id="addr_' + (i + 1) + '"></tr>');
         i++;
         edges_counter = i;
+
     });
     $("#delete_edges").click(function () {
         if (i > 1) {
@@ -66,7 +96,7 @@ $(document).ready(function () {
             } else if (document.getElementById('label_propagation').checked) {
                 algorithm = "label_propagation"
             }
-            data.append('algorithm',algorithm);
+            data.append('algorithm', algorithm);
             $.ajax({
                 url: "/graph/operate/",
                 type: "POST",
@@ -75,7 +105,48 @@ $(document).ready(function () {
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    alert("Good!")
+                    var result = data["result"];
+                    var keys = [];
+                    for (var key in result) {
+                        keys.push(key)
+                    }
+                    var edges = data["edges"];
+
+                    alert(edges[0][0]);
+                    $("#container").html('<h3> Зображення графа</h3>\n' +
+                        '        <div id="graph-container"></div>'
+                    );
+                    var i,
+                        g = {
+                            nodes: [],
+                            edges: []
+                        };
+                    // Generate a random graph:
+                    for (i = 0; i < keys.length; i++)
+                        g.nodes.push({
+                            id: keys[i],
+                            label: keys[i],
+                            x: i * 0.1,
+                            y: i * 0.1,
+                            size: 20 * result[keys[i]],
+                            color: '#142066'
+                        });
+                    for (i = 0; i < edges.length; i++)
+                        g.edges.push({
+                            id: 'e' + i,
+                            source: edges[i][0],
+                            target: edges[i][1],
+                            size: 1,
+                            color: 'rgba(8,9,10,0.89)'
+                        });
+                    // Instantiate sigma:
+                    s = new sigma({
+                        graph: g,
+                        container: 'graph-container',
+                        zoom: 1.2,
+                        zoomMin: 0.1,
+                        zoomMax: 1.5,
+                    });
                 }
             });
             return false;
