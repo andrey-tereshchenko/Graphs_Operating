@@ -1,3 +1,6 @@
+import codecs
+import csv
+
 from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.utils import json
@@ -19,6 +22,20 @@ def choose_algorithm(algorithm, graph):
             print(i)
 
 
+def transform_graph_from_csv(file):
+    vertex = list()
+    edges = list()
+    weights = list()
+    csv_file = csv.DictReader(codecs.iterdecode(file, 'utf-8'))
+    for rows in csv_file:
+        if rows['Vertex'] != '':
+            vertex.append(rows['Vertex'])
+        if rows['src'] != '' and rows['dst'] != '' and rows['w'] != '':
+            edges.append((rows['src'], rows['dst'], int(rows['w'])))
+            weights.append(rows['w'])
+    return vertex, edges
+
+
 class GraphView(APIView):
     def get(self, request):
         return render(request, 'index.html')
@@ -27,29 +44,33 @@ class GraphView(APIView):
         vertex = list()
         edges = list()
         weights = list()
-        my_data = request.data
-        vertex_count = int(my_data['vertex_counter'])
-        edges_count = int(my_data['edges_counter'])
-        algorithm = my_data['algorithm']
         label_v = 'vertex_name_'
         label_src = 'src_'
         label_dest = 'dest_'
         label_weight = 'weight_'
-        for i in range(vertex_count):
-            vertex.append(my_data[label_v + str(i)])
-        for i in range(edges_count):
-            edges.append(
-                (my_data[label_src + str(i)], my_data[label_dest + str(i)], int(my_data[label_weight + str(i)])))
-            weights.append(my_data[label_weight + str(i)])
-        # print(vertex)
-        # print(edges)
-        # print(weights)
+        my_data = request.data
+        type_input = my_data['type_input']
+        if type_input == 'hand_input':
+            print("hand_input")
+            vertex_count = int(my_data['vertex_counter'])
+            edges_count = int(my_data['edges_counter'])
+            for i in range(vertex_count):
+                vertex.append(my_data[label_v + str(i)])
+            for i in range(edges_count):
+                edges.append(
+                    (my_data[label_src + str(i)], my_data[label_dest + str(i)], int(my_data[label_weight + str(i)])))
+                weights.append(my_data[label_weight + str(i)])
+        elif type_input == 'csv_input':
+            print("csv_input")
+            file = request.FILES['my_file']
+            vertex, edges = transform_graph_from_csv(file)
+
+        algorithm = my_data['algorithm']
         print(algorithm)
         G = nx.Graph()
         G.add_nodes_from(vertex)
         G.add_weighted_edges_from(edges)
         result = choose_algorithm(algorithm, G)
-        print(result)
         data = dict()
         data['edges'] = edges
         data['result'] = result

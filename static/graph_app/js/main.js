@@ -19,6 +19,16 @@ var edges_counter = 1;
 
 
 $(document).ready(function () {
+    $("input[id$='radio2']").click(function () {
+        $("#hand_input").hide();
+        $("#csv_input").show();
+    });
+
+    $("input[id$='radio1']").click(function () {
+        $("#csv_input").hide();
+        $("#hand_input").show();
+    });
+
     var i = 1;
     $("#add_vertex").click(function () {
         $('#addr' + i).html("<td>" + (i + 1) + "</td><td><input name='vertex_name_" + i + "' type='text' placeholder='Назва' class='form-control input-md'  /> ");
@@ -96,7 +106,14 @@ $(document).ready(function () {
             } else if (document.getElementById('label_propagation').checked) {
                 algorithm = "label_propagation"
             }
+            var type_input = '';
+            if (document.getElementById('radio1').checked) {
+                type_input = "hand_input"
+            } else if (document.getElementById('radio2').checked) {
+                type_input = "csv_input"
+            }
             data.append('algorithm', algorithm);
+            data.append('type_input', type_input);
             $.ajax({
                 url: "/graph/operate/",
                 type: "POST",
@@ -126,8 +143,8 @@ $(document).ready(function () {
                         g.nodes.push({
                             id: keys[i],
                             label: keys[i],
-                            x: i * 0.1,
-                            y: i * 0.1,
+                            x: i * 0.1 + Math.random() * 0.1,
+                            y: i * 0.1 + Math.random() * 0.1,
                             size: 20 * result[keys[i]],
                             color: '#142066'
                         });
@@ -146,6 +163,9 @@ $(document).ready(function () {
                         zoom: 1.2,
                         zoomMin: 0.1,
                         zoomMax: 1.5,
+                        defaultLabelSize: 5,
+                        labelThreshold: 0.1,
+                        autoRescale: true,
                     });
                 }
             });

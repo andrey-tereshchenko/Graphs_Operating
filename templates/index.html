@@ -1,9 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
+    <div class="radio_group" style="margin-top: 10px;">
+        <h3 style="margin-left: 5%">Оберіть спосіб вводу даних про граф</h3>
+        <div class="flex-container">
+            <div class="custom-control custom-radio" style="margin-left: 5%;">
+                <input type="radio" class="custom-control-input" id="radio1" name="group" checked>
+                <label class="custom-control-label" for="radio1">Ручне введення</label>
+            </div>
+            <div class="custom-control custom-radio" style="margin-left: 5%;">
+                <input type="radio" class="custom-control-input" id="radio2" name="group">
+                <label class="custom-control-label" for="radio2">CSV файл</label>
+            </div>
+        </div>
+    </div>
     <form id="graph_operate" enctype="multipart/form-data" method="post" action="">
         {% csrf_token %}
         <h3 style="margin-left: 5%">Введіть дані про вершини та ребра графа</h3>
-        <div style=" display: flex;">
+        <div id="hand_input" style=" display: flex;">
             <div class="container" style="width: 20%;margin-left: 5%;margin-top: 2%;">
                 <div class="row clearfix">
                     <div class="col-md-12 column">
@@ -80,6 +93,14 @@
                                                                                        class="pull-right btn btn-default">Видалити</a>
             </div>
         </div>
+        <div id="csv_input" style="display: none">
+            <div class="flex-container">
+                <div class="form-group" style="margin-left: 5%;">
+                    <label for="file">CSV файл з графом</label>
+                    <input type="file" class="form-control-file" name="my_file" id="file">
+                </div>
+            </div>
+        </div>
 
         <div class="container" style="margin-left: 5%">
             <h3>Алгоритми</h3>
@@ -102,40 +123,40 @@
 
 {% block graph_draw %}
     <div id="container" style="height: 400px;width: 700px; margin-left: 5%">
-{#        <h3> Зображення графа</h3>#}
-{#        <div id="graph-container"></div>#}
+        {#        <h3> Зображення графа</h3>#}
+        {#        <div id="graph-container"></div>#}
     </div>
-{#        <script>#}
-{#            var i,#}
-{#                s,#}
-{#                N = 30,#}
-{#                E = 40,#}
-{#                g = {#}
-{#                    nodes: [],#}
-{#                    edges: []#}
-{#                };#}
-{#            // Generate a random graph:#}
-{#            for (i = 0; i < N; i++)#}
-{#                g.nodes.push({#}
-{#                    id: 'n' + i,#}
-{#                    label: 'Node ' + i,#}
-{#                    x: Math.random(),#}
-{#                    y: Math.random(),#}
-{#                    size: Math.random(),#}
-{#                    color: '#666'#}
-{#                });#}
-{#            for (i = 0; i < E; i++)#}
-{#                g.edges.push({#}
-{#                    id: 'e' + i,#}
-{#                    source: 'n' + (Math.random() * N | 0),#}
-{#                    target: 'n' + (Math.random() * N | 0),#}
-{#                    size: Math.random(),#}
-{#                    color: '#ccc'#}
-{#                });#}
-{#            // Instantiate sigma:#}
-{#            s = new sigma({#}
-{#                graph: g,#}
-{#                container: 'graph-container'#}
-{#            });#}
-{#        </script>#}
+    {#        <script>#}
+    {#            var i,#}
+    {#                s,#}
+    {#                N = 30,#}
+    {#                E = 40,#}
+    {#                g = {#}
+    {#                    nodes: [],#}
+    {#                    edges: []#}
+    {#                };#}
+    {#            // Generate a random graph:#}
+    {#            for (i = 0; i < N; i++)#}
+    {#                g.nodes.push({#}
+    {#                    id: 'n' + i,#}
+    {#                    label: 'Node ' + i,#}
+    {#                    x: Math.random(),#}
+    {#                    y: Math.random(),#}
+    {#                    size: Math.random(),#}
+    {#                    color: '#666'#}
+    {#                });#}
+    {#            for (i = 0; i < E; i++)#}
+    {#                g.edges.push({#}
+    {#                    id: 'e' + i,#}
+    {#                    source: 'n' + (Math.random() * N | 0),#}
+    {#                    target: 'n' + (Math.random() * N | 0),#}
+    {#                    size: Math.random(),#}
+    {#                    color: '#ccc'#}
+    {#                });#}
+    {#            // Instantiate sigma:#}
+    {#            s = new sigma({#}
+    {#                graph: g,#}
+    {#                container: 'graph-container'#}
+    {#            });#}
+    {#        </script>#}
 {% endblock %}
