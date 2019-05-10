@@ -123,40 +123,7 @@
 
 {% block graph_draw %}
     <div id="container" style="height: 400px;width: 700px; margin-left: 5%">
-        {#        <h3> Зображення графа</h3>#}
-        {#        <div id="graph-container"></div>#}
     </div>
-    {#        <script>#}
-    {#            var i,#}
-    {#                s,#}
-    {#                N = 30,#}
-    {#                E = 40,#}
-    {#                g = {#}
-    {#                    nodes: [],#}
-    {#                    edges: []#}
-    {#                };#}
-    {#            // Generate a random graph:#}
-    {#            for (i = 0; i < N; i++)#}
-    {#                g.nodes.push({#}
-    {#                    id: 'n' + i,#}
-    {#                    label: 'Node ' + i,#}
-    {#                    x: Math.random(),#}
-    {#                    y: Math.random(),#}
-    {#                    size: Math.random(),#}
-    {#                    color: '#666'#}
-    {#                });#}
-    {#            for (i = 0; i < E; i++)#}
-    {#                g.edges.push({#}
-    {#                    id: 'e' + i,#}
-    {#                    source: 'n' + (Math.random() * N | 0),#}
-    {#                    target: 'n' + (Math.random() * N | 0),#}
-    {#                    size: Math.random(),#}
-    {#                    color: '#ccc'#}
-    {#                });#}
-    {#            // Instantiate sigma:#}
-    {#            s = new sigma({#}
-    {#                graph: g,#}
-    {#                container: 'graph-container'#}
-    {#            });#}
-    {#        </script>#}
+    <div id="result" style="margin-left: 5%;margin-top: 5%;width: 700px;margin-bottom: 5%;">
+    </div>
 {% endblock %}

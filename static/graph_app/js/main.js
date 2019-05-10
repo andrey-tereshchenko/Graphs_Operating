@@ -122,16 +122,30 @@ $(document).ready(function () {
                 processData: false,
                 contentType: false,
                 success: function (data) {
+                    var vertex = data["vertex"];
+                    var algorithm = data["algorithm"];
                     var result = data["result"];
-                    var keys = [];
-                    for (var key in result) {
-                        keys.push(key)
-                    }
                     var edges = data["edges"];
-
-                    alert(edges[0][0]);
+                    alert(result["a"]);
+                    var message_result = "";
+                    if (algorithm == 'page_rank') {
+                        var v;
+                        for (v = 0; v < vertex.length; v++) {
+                            message_result += vertex[v];
+                            message_result += ': ' + result[vertex[v]] + ', ';
+                        }
+                    } else if (algorithm == 'label_propagation') {
+                        var i;
+                        for (i = 0; i < result.length; i++) {
+                            message_result += "Спільнота " + (i + 1) + ' :';
+                            message_result += result[i];
+                        }
+                    }
                     $("#container").html('<h3> Зображення графа</h3>\n' +
                         '        <div id="graph-container"></div>'
+                    );
+                    $("#result").html('<h3>Результат виконання алгоритму:</h3>\n' +
+                        message_result
                     );
                     var i,
                         g = {
@@ -139,14 +153,16 @@ $(document).ready(function () {
                             edges: []
                         };
                     // Generate a random graph:
-                    for (i = 0; i < keys.length; i++)
+                    for (i = 0; i < vertex.length; i++)
                         g.nodes.push({
-                            id: keys[i],
-                            label: keys[i],
-                            x: i * 0.1 + Math.random() * 0.1,
-                            y: i * 0.1 + Math.random() * 0.1,
-                            size: 20 * result[keys[i]],
-                            color: '#142066'
+                            id: vertex[i],
+                            label: vertex[i],
+                            x: Math.random(),
+                            y: Math.random(),
+                            // size: result[keys[i]],
+                            size: 2,
+                            color: '#142066',
+                            labelThreshold: 0.01,
                         });
                     for (i = 0; i < edges.length; i++)
                         g.edges.push({
@@ -154,18 +170,14 @@ $(document).ready(function () {
                             source: edges[i][0],
                             target: edges[i][1],
                             size: 1,
-                            color: 'rgba(8,9,10,0.89)'
+                            color: 'rgba(8,9,10,0.89)',
+                            type: 'arrow',
                         });
                     // Instantiate sigma:
                     s = new sigma({
                         graph: g,
                         container: 'graph-container',
-                        zoom: 1.2,
-                        zoomMin: 0.1,
-                        zoomMax: 1.5,
-                        defaultLabelSize: 5,
-                        labelThreshold: 0.1,
-                        autoRescale: true,
+
                     });
                 }
             });

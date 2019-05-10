@@ -15,11 +15,15 @@ def index(request):
 def choose_algorithm(algorithm, graph):
     if algorithm == 'page_rank':
         result = nx.pagerank(graph)
+        print(result)
         return result
     elif algorithm == 'label_propagation':
+        result = list()
         g = nx.algorithms.community.label_propagation_communities(graph)
         for i in g:
-            print(i)
+            result.append(list(i))
+        print(result)
+        return result
 
 
 def transform_graph_from_csv(file):
@@ -74,4 +78,6 @@ class GraphView(APIView):
         data = dict()
         data['edges'] = edges
         data['result'] = result
+        data['vertex'] = vertex
+        data['algorithm'] = algorithm
         return JsonResponse(data)
