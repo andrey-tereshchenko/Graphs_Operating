@@ -24,6 +24,10 @@ def choose_algorithm(algorithm, graph):
             result.append(list(i))
         print(result)
         return result
+    elif algorithm == 'triangle_count':
+        result = nx.triangles(graph)
+        print(result)
+        return result
 
 
 def transform_graph_from_csv(file):

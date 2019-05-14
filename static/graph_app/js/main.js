@@ -105,6 +105,8 @@ $(document).ready(function () {
                 algorithm = "page_rank"
             } else if (document.getElementById('label_propagation').checked) {
                 algorithm = "label_propagation"
+            } else if (document.getElementById('triangle_count').checked) {
+                algorithm = "triangle_count"
             }
             var type_input = '';
             if (document.getElementById('radio1').checked) {
@@ -126,7 +128,7 @@ $(document).ready(function () {
                     var algorithm = data["algorithm"];
                     var result = data["result"];
                     var edges = data["edges"];
-                    alert(result["a"]);
+                    alert(result);
                     var message_result = "";
                     if (algorithm == 'page_rank') {
                         var v;
@@ -139,6 +141,12 @@ $(document).ready(function () {
                         for (i = 0; i < result.length; i++) {
                             message_result += "Спільнота " + (i + 1) + ' :';
                             message_result += result[i];
+                        }
+                    } else if (algorithm == 'triangle_count') {
+                        var v;
+                        for (v = 0; v < vertex.length; v++) {
+                            message_result += vertex[v];
+                            message_result += ': ' + result[vertex[v]] + ', ';
                         }
                     }
                     $("#container").html('<h3> Зображення графа</h3>\n' +
