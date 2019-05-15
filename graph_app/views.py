@@ -3,6 +3,8 @@ import csv
 
 from django.http import JsonResponse
 from django.shortcuts import render
+import pandas as pd
+import surprise
 from rest_framework.utils import json
 from rest_framework.views import APIView
 import networkx as nx
@@ -28,6 +30,10 @@ def choose_algorithm(algorithm, graph):
         result = nx.triangles(graph)
         print(result)
         return result
+    elif algorithm == 'svd':
+        result = nx.triangles(graph)
+        print(result)
+        return result
 
 
 def transform_graph_from_csv(file):
@@ -42,6 +48,30 @@ def transform_graph_from_csv(file):
             edges.append((rows['src'], rows['dst'], int(rows['w'])))
             weights.append(rows['w'])
     return vertex, edges
+
+
+def transform_graph_to_dataset(graph):
+    from_list = list()
+    to_list = list()
+    weight_list = list()
+    for e in graph.edges(data=True):
+        from_list.append(e[0])
+        to_list.append(e[1])
+        weight_list.append(e[2]['weight'])
+    data = pd.DataFrame({'from': from_list, 'to': to_list, 'weight': weight_list})
+    return data
+
+
+def svd_algorithm(graph):
+    dataset = transform_graph_to_dataset(graph)
+    lower_weight = dataset['weight'].min()
+    upper_weight = dataset['weight'].max()
+    reader = surprise.Reader(rating_scale=(0, 10))
+    data = surprise.Dataset.load_from_df(dataset, reader)
+    alg = surprise.SVDpp()
+    alg.fit(data.build_full_trainset())
+    pred = alg.predict(uid='Alan', iid='Eragon')
+    print(pred.est)
 
 
 class GraphView(APIView):
@@ -66,7 +96,9 @@ class GraphView(APIView):
                 vertex.append(my_data[label_v + str(i)])
             for i in range(edges_count):
                 edges.append(
-                    (my_data[label_src + str(i)], my_data[label_dest + str(i)], int(my_data[label_weight + str(i)])))
+                    (
+                        my_data[label_src + str(i)], my_data[label_dest + str(i)],
+                        int(my_data[label_weight + str(i)])))
                 weights.append(my_data[label_weight + str(i)])
         elif type_input == 'csv_input':
             print("csv_input")
@@ -84,4 +116,5 @@ class GraphView(APIView):
         data['result'] = result
         data['vertex'] = vertex
         data['algorithm'] = algorithm
+        svd_algorithm(G)
         return JsonResponse(data)

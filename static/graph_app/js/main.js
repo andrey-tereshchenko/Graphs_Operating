@@ -102,11 +102,13 @@ $(document).ready(function () {
             data.append('edges_counter', edges_counter);
             var algorithm = '';
             if (document.getElementById('page_rank').checked) {
-                algorithm = "page_rank"
+                algorithm = "page_rank";
             } else if (document.getElementById('label_propagation').checked) {
-                algorithm = "label_propagation"
+                algorithm = "label_propagation";
             } else if (document.getElementById('triangle_count').checked) {
-                algorithm = "triangle_count"
+                algorithm = "triangle_count";
+            } else if (document.getElementById('svd').checked) {
+                algorithm = "svd";
             }
             var type_input = '';
             if (document.getElementById('radio1').checked) {
@@ -143,6 +145,12 @@ $(document).ready(function () {
                             message_result += result[i];
                         }
                     } else if (algorithm == 'triangle_count') {
+                        var v;
+                        for (v = 0; v < vertex.length; v++) {
+                            message_result += vertex[v];
+                            message_result += ': ' + result[vertex[v]] + ', ';
+                        }
+                    } else if (algorithm == 'svd') {
                         var v;
                         for (v = 0; v < vertex.length; v++) {
                             message_result += vertex[v];
