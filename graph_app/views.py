@@ -31,8 +31,7 @@ def choose_algorithm(algorithm, graph):
         print(result)
         return result
     elif algorithm == 'svd':
-        result = nx.triangles(graph)
-        print(result)
+        result = svd_algorithm(graph)
         return result
 
 
@@ -63,6 +62,7 @@ def transform_graph_to_dataset(graph):
 
 
 def svd_algorithm(graph):
+    predicted_list = list()
     dataset = transform_graph_to_dataset(graph)
     lower_weight = dataset['weight'].min()
     upper_weight = dataset['weight'].max()
@@ -70,8 +70,28 @@ def svd_algorithm(graph):
     data = surprise.Dataset.load_from_df(dataset, reader)
     alg = surprise.SVDpp()
     alg.fit(data.build_full_trainset())
-    pred = alg.predict(uid='Alan', iid='Eragon')
-    print(pred.est)
+    src_nodes = search_src_nodes(graph)
+    dst_nodes = search_dst_nodes(graph)
+    for src in src_nodes:
+        for dst in dst_nodes:
+            if (src, dst) not in graph.edges:
+                pred = alg.predict(uid=src, iid=dst)
+                predicted_list.append((src, dst, pred.est))
+    return predicted_list
+
+
+def search_src_nodes(graph):
+    nodes = set()
+    for e in graph.edges:
+        nodes.add(e[0])
+    return list(nodes)
+
+
+def search_dst_nodes(graph):
+    nodes = set()
+    for e in graph.edges:
+        nodes.add(e[1])
+    return list(nodes)
 
 
 class GraphView(APIView):
@@ -116,5 +136,7 @@ class GraphView(APIView):
         data['result'] = result
         data['vertex'] = vertex
         data['algorithm'] = algorithm
-        svd_algorithm(G)
+        if algorithm == 'svd':
+            data['svd_src'] = search_src_nodes(G)
+            data['svd_dst'] = search_dst_nodes(G)
         return JsonResponse(data)

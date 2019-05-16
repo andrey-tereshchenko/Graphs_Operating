@@ -152,10 +152,29 @@ $(document).ready(function () {
                         }
                     } else if (algorithm == 'svd') {
                         var v;
-                        for (v = 0; v < vertex.length; v++) {
-                            message_result += vertex[v];
-                            message_result += ': ' + result[vertex[v]] + ', ';
+                        message_result += '<table class="table">\n' +
+                            '  <thead>\n' +
+                            '    <tr>\n' +
+                            '      <th scope="col">#</th>\n' +
+                            '      <th scope="col">Source</th>\n' +
+                            '      <th scope="col">Destination</th>\n' +
+                            '      <th scope="col">Predicted weight</th>\n' +
+                            '    </tr>\n' +
+                            '  </thead>' +
+                            '<tbody>';
+                        for (v = 0; v < result.length; v++) {
+                            message_result += '<tr>\n' +
+                                '      <th scope="row">' + (v + 1) + '</th>\n' +
+                                '      <td>' + result[v][0] + '</td>\n' +
+                                '      <td>' + result[v][1] + '</td>\n' +
+                                '      <td>' + result[v][2] + '</td>\n' +
+                                '    </tr>'
+                            // message_result += ' Src : ' + result[v][0];
+                            // message_result += ' Dst : ' + result[v][1];
+                            // message_result += ' Predicted_w : ' + result[v][2] + '<br>';
                         }
+                        message_result += '</tbody>\n' +
+                            '</table>'
                     }
                     $("#container").html('<h3> Зображення графа</h3>\n' +
                         '        <div id="graph-container"></div>'
@@ -168,18 +187,52 @@ $(document).ready(function () {
                             nodes: [],
                             edges: []
                         };
-                    // Generate a random graph:
-                    for (i = 0; i < vertex.length; i++)
-                        g.nodes.push({
-                            id: vertex[i],
-                            label: vertex[i],
-                            x: Math.random(),
-                            y: Math.random(),
-                            // size: result[keys[i]],
-                            size: 2,
-                            color: '#142066',
-                            labelThreshold: 0.01,
-                        });
+                    if (algorithm == 'svd') {
+                        var svd_src = data["svd_src"];
+                        var svd_dst = data["svd_dst"];
+                        // Generate a random graph:
+                        var j = 0;
+                        for (i = 0; i < svd_src.length; i++) {
+                            j++;
+                            g.nodes.push({
+                                id: svd_src[i],
+                                label: svd_src[i],
+                                x: 1,
+                                y: j * 0.2,
+                                // size: result[keys[i]],
+                                size: 2,
+                                color: '#142066',
+                                labelThreshold: 0.01,
+                            });
+                        }
+                        j = 0;
+                        for (i = 0; i < svd_dst.length; i++) {
+                            j++;
+                            g.nodes.push({
+                                id: svd_dst[i],
+                                label: svd_dst[i],
+                                x: 2,
+                                y: j * 0.2,
+                                // size: result[keys[i]],
+                                size: 2,
+                                color: '#142066',
+                                labelThreshold: 0.01,
+                            });
+                        }
+                    } else {
+                        // Generate a random graph:
+                        for (i = 0; i < vertex.length; i++)
+                            g.nodes.push({
+                                id: vertex[i],
+                                label: vertex[i],
+                                x: Math.random(),
+                                y: Math.random(),
+                                // size: result[keys[i]],
+                                size: 2,
+                                color: '#142066',
+                                labelThreshold: 0.01,
+                            });
+                    }
                     for (i = 0; i < edges.length; i++)
                         g.edges.push({
                             id: 'e' + i,
@@ -189,6 +242,7 @@ $(document).ready(function () {
                             color: 'rgba(8,9,10,0.89)',
                             type: 'arrow',
                         });
+
                     // Instantiate sigma:
                     s = new sigma({
                         graph: g,
