@@ -134,16 +134,53 @@ $(document).ready(function () {
                     var message_result = "";
                     if (algorithm == 'page_rank') {
                         var v;
+                        message_result += '<table class="table">\n' +
+                            '  <thead>\n' +
+                            '    <tr>\n' +
+                            '      <th scope="col">#</th>\n' +
+                            '      <th scope="col">Page Label</th>\n' +
+                            '      <th scope="col">Rank</th>\n' +
+                            '    </tr>\n' +
+                            '  </thead>' +
+                            '<tbody>';
                         for (v = 0; v < vertex.length; v++) {
-                            message_result += vertex[v];
-                            message_result += ': ' + result[vertex[v]] + ', ';
+                            message_result += '<tr>\n' +
+                                '      <th scope="row">' + (v + 1) + '</th>\n' +
+                                '      <td>' + vertex[v] + '</td>\n' +
+                                '      <td>' + result[vertex[v]] + '</td>\n' +
+                                '    </tr>'
+
                         }
+                        message_result += '</tbody>\n' +
+                            '</table>'
+                        // for (v = 0; v < vertex.length; v++) {
+                        //
+                        //     message_result += vertex[v];
+                        //     message_result += ': ' + result[vertex[v]] + ', ';
+                        // }
                     } else if (algorithm == 'label_propagation') {
                         var i;
+                        message_result += '<table class="table">\n' +
+                            '  <thead>\n' +
+                            '    <tr>\n' +
+                            '      <th scope="col">#</th>\n' +
+                            '      <th scope="col">Community</th>\n' +
+                            '    </tr>\n' +
+                            '  </thead>' +
+                            '<tbody>';
                         for (i = 0; i < result.length; i++) {
-                            message_result += "Спільнота " + (i + 1) + ' :';
-                            message_result += result[i];
+                            message_result += '<tr>\n' +
+                                '      <th scope="row">' + (i + 1) + '</th>\n' +
+                                '      <td>' + result[i] + '</td>\n' +
+                                '    </tr>'
+
                         }
+                        message_result += '</tbody>\n' +
+                            '</table>'
+                        // for (i = 0; i < result.length; i++) {
+                        //     message_result += "Спільнота " + (i + 1) + ' :';
+                        //     message_result += result[i];
+                        // }
                     } else if (algorithm == 'triangle_count') {
                         var v;
                         for (v = 0; v < vertex.length; v++) {
@@ -169,9 +206,7 @@ $(document).ready(function () {
                                 '      <td>' + result[v][1] + '</td>\n' +
                                 '      <td>' + result[v][2] + '</td>\n' +
                                 '    </tr>'
-                            // message_result += ' Src : ' + result[v][0];
-                            // message_result += ' Dst : ' + result[v][1];
-                            // message_result += ' Predicted_w : ' + result[v][2] + '<br>';
+
                         }
                         message_result += '</tbody>\n' +
                             '</table>'
