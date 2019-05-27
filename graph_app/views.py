@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.shortcuts import render
 import pandas as pd
 import surprise
-from rest_framework.utils import json
 from rest_framework.views import APIView
 import networkx as nx
 

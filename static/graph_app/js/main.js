@@ -1,21 +1,48 @@
 var vertex_counter = 1;
 var edges_counter = 1;
-// var g = {
-//     nodes: [],
-//     edges: []
-// };
-// g.nodes.push({
-//     id: 'n_0',
-//     label: 'Node 0',
-//     x: Math.random(),
-//     y: Math.random(),
-//     size: 1,
-//     color: '#7b130f'
-// });
-// s = new sigma({
-//     graph: g,
-//     container: 'graph-container'
-// });
+
+function downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+
+    // CSV file
+    csvFile = new Blob([csv], {type: "text/csv"});
+
+    // Download link
+    downloadLink = document.createElement("a");
+
+    // File name
+    downloadLink.download = filename;
+
+    // Create a link to the file
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+
+    // Hide download link
+    downloadLink.style.display = "none";
+
+    // Add the link to DOM
+    document.body.appendChild(downloadLink);
+
+    // Click download link
+    downloadLink.click();
+}
+
+function exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("#my_table tr");
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("#my_table td, #my_table th");
+
+        for (var j = 0; j < cols.length; j++)
+            row.push(cols[j].innerText);
+
+        csv.push(row.join(","));
+    }
+
+    // Download CSV file
+    downloadCSV(csv.join("\n"), filename);
+}
 
 
 $(document).ready(function () {
@@ -36,19 +63,6 @@ $(document).ready(function () {
         $('#table_vertex').append('<tr id="addr' + (i + 1) + '"></tr>');
         i++;
         vertex_counter = i;
-        // g.nodes.push({
-        //     id: 'n' + i,
-        //     label: 'Node ' + i,
-        //     x: Math.random(),
-        //     y: Math.random(),
-        //     size: 1,
-        //     color: '#7b130f'
-        // });
-        // s.kill()
-        // s = new sigma({
-        //     graph: g,
-        //     container: 'graph-container'
-        // });
     });
     $("#delete_vertex").click(function () {
         if (i > 1) {
@@ -130,11 +144,11 @@ $(document).ready(function () {
                     var algorithm = data["algorithm"];
                     var result = data["result"];
                     var edges = data["edges"];
-                    alert(result);
+                    // alert(result);
                     var message_result = "";
                     if (algorithm == 'page_rank') {
                         var v;
-                        message_result += '<table class="table">\n' +
+                        message_result += '<table id="my_table" class="table">\n' +
                             '  <thead>\n' +
                             '    <tr>\n' +
                             '      <th scope="col">#</th>\n' +
@@ -153,14 +167,9 @@ $(document).ready(function () {
                         }
                         message_result += '</tbody>\n' +
                             '</table>'
-                        // for (v = 0; v < vertex.length; v++) {
-                        //
-                        //     message_result += vertex[v];
-                        //     message_result += ': ' + result[vertex[v]] + ', ';
-                        // }
                     } else if (algorithm == 'label_propagation') {
                         var i;
-                        message_result += '<table class="table">\n' +
+                        message_result += '<table id="my_table" class="table">\n' +
                             '  <thead>\n' +
                             '    <tr>\n' +
                             '      <th scope="col">#</th>\n' +
@@ -177,19 +186,29 @@ $(document).ready(function () {
                         }
                         message_result += '</tbody>\n' +
                             '</table>'
-                        // for (i = 0; i < result.length; i++) {
-                        //     message_result += "Спільнота " + (i + 1) + ' :';
-                        //     message_result += result[i];
-                        // }
                     } else if (algorithm == 'triangle_count') {
+                        message_result += '<table id="my_table" class="table">\n' +
+                            '  <thead>\n' +
+                            '    <tr>\n' +
+                            '      <th scope="col">#</th>\n' +
+                            '      <th scope="col">Vertex</th>\n' +
+                            '      <th scope="col">Triangle count</th>\n' +
+                            '    </tr>\n' +
+                            '  </thead>' +
+                            '<tbody>';
                         var v;
                         for (v = 0; v < vertex.length; v++) {
-                            message_result += vertex[v];
-                            message_result += ': ' + result[vertex[v]] + ', ';
+                            message_result += '<tr>\n' +
+                                '      <th scope="row">' + (v + 1) + '</th>\n' +
+                                '      <td>' + vertex[v] + '</td>\n' +
+                                '      <td>' + result[vertex[v]] + '</td>\n' +
+                                '    </tr>'
                         }
+                        message_result += '</tbody>\n' +
+                            '</table>'
                     } else if (algorithm == 'svd') {
                         var v;
-                        message_result += '<table class="table">\n' +
+                        message_result += '<table id="my_table" class="table">\n' +
                             '  <thead>\n' +
                             '    <tr>\n' +
                             '      <th scope="col">#</th>\n' +
@@ -217,6 +236,7 @@ $(document).ready(function () {
                     $("#result").html('<h3>Результат виконання алгоритму:</h3>\n' +
                         message_result
                     );
+                    $("#save_result").show();
                     var i,
                         g = {
                             nodes: [],
