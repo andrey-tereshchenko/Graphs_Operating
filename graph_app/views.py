@@ -16,18 +16,15 @@ def index(request):
 def choose_algorithm(algorithm, graph):
     if algorithm == 'page_rank':
         result = nx.pagerank(graph)
-        print(result)
         return result
     elif algorithm == 'label_propagation':
         result = list()
         g = nx.algorithms.community.label_propagation_communities(graph)
         for i in g:
             result.append(list(i))
-        print(result)
         return result
     elif algorithm == 'triangle_count':
         result = nx.triangles(graph)
-        print(result)
         return result
     elif algorithm == 'svd':
         result = svd_algorithm(graph)

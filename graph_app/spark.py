@@ -30,5 +30,8 @@ def label_propagation(graph):
 vertex = [("A", "A"), ("B", "B"), ("C", "C"), ("D", "D")]
 edges = [("A", "B", 10), ("A", "C", 5), ("D", "C", 6), ("B", "D", 2)]
 graph = create_graph(vertex, edges)
-result = graph.pageRank(resetProbability=0.15, tol=0.01)
-print(result.vertices._dict())
+res = graph.vertices.collect()
+for i in res:
+    print(i.name)
+# result = graph.pageRank(resetProbability=0.15, tol=0.01
+# print(result.vertices._dict())

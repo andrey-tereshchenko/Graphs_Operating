@@ -288,22 +288,53 @@ $(document).ready(function () {
                                 labelThreshold: 0.01,
                             });
                     }
-                    for (i = 0; i < edges.length; i++)
-                        g.edges.push({
-                            id: 'e' + i,
-                            source: edges[i][0],
-                            target: edges[i][1],
-                            size: 1,
-                            color: 'rgba(8,9,10,0.89)',
-                            type: 'arrow',
-                        });
+                    if (algorithm == 'svd' || algorithm == 'triangle_count') {
+                        for (i = 0; i < edges.length; i++)
+                            g.edges.push({
+                                id: 'e' + i,
+                                source: edges[i][0],
+                                target: edges[i][1],
+                                size: 1,
+                                color: 'rgba(8,9,10,0.89)',
+                                type: 'arrow',
+                            });
+                    }else {
+                        for (i = 0; i < edges.length; i++)
+                            g.edges.push({
+                                id: 'e' + i,
+                                source: edges[i][0],
+                                target: edges[i][1],
+                                size: 1,
+                                color: 'rgba(8,9,10,0.89)',
+                                type: 'curvedArrow',
+                            });
+                    }
 
                     // Instantiate sigma:
                     s = new sigma({
                         graph: g,
                         container: 'graph-container',
+                        settings: {
+                            minArrowSize: 5
+                        },
+                        renderer: {
+                            container: document.getElementById('graph-container'),
+                            type: sigma.renderers.canvas
+                        }
 
                     });
+                    if (algorithm != 'svd') {
+                        s.startForceAtlas2({
+                            worker: false,
+                            barnesHutOptimize: false,
+                            slowDown: 1000,
+                            iterationsPerRender: 1000
+                        });
+
+                        setTimeout(function () {
+                            s.stopForceAtlas2();
+                        }, 3000)
+                    }
                 }
             });
             return false;
