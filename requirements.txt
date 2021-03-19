@@ -1,7 +1,7 @@
 cycler==0.10.0
 decorator==4.4.0
 django>=2.2.1
-djangorestframework==3.9.3
+djangorestframework==3.11.2
 graphframes==0.6
 joblib==0.13.2
 kiwisolver==1.1.0
